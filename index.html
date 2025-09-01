@@ -355,6 +355,10 @@
                 unit.weeks.forEach(week => {
                     const weekCard = document.createElement('div');
                     weekCard.className = 'bg-white rounded-lg shadow-lg overflow-hidden flex flex-col';
+                    
+                    // Correctly handle JSON string for the data attribute
+                    const weekDataString = JSON.stringify(week).replace(/'/g, '&#39;');
+
                     weekCard.innerHTML = `
                         <div class="p-4 bg-teal-700 text-white">
                             <h3 class="font-bold text-lg">Week ${week.week}: ${week.title}</h3>
@@ -362,7 +366,7 @@
                         <div class="p-4 flex-grow space-y-3">
                             ${[1, 2, 3].map(tier => `
                                 <div data-tier="${tier}" class="tier-card ${activeTier !== 'all' && activeTier != tier ? 'hidden' : ''}">
-                                    <button data-week='${JSON.stringify(week).replace(/'/g, "&apos;").replace(/"/g, "'")}' data-tier="${tier}" class="w-full text-left p-3 bg-slate-50 hover:bg-teal-50 rounded-md transition-colors">
+                                    <button data-week='${weekDataString}' data-tier="${tier}" class="w-full text-left p-3 bg-slate-50 hover:bg-teal-50 rounded-md transition-colors">
                                         <h4 class="font-semibold text-teal-800">Tier ${tier} (${tier === 1 ? '4-5' : tier === 2 ? '6-9' : '9-12'} yrs)</h4>
                                         <p class="text-sm text-slate-600 mt-1">${week.tiers[tier].title}</p>
                                     </button>
@@ -379,9 +383,7 @@
 
             document.querySelectorAll('.tier-card button').forEach(button => {
                 button.addEventListener('click', (e) => {
-                    // Correctly parse the JSON string from the button's data-week attribute
-                    const weekDataString = e.currentTarget.dataset.week.replace(/'/g, '"').replace(/&apos;/g, "'");
-                    const weekData = JSON.parse(weekDataString);
+                    const weekData = JSON.parse(e.currentTarget.dataset.week);
                     const tier = e.currentTarget.dataset.tier;
                     openModal(weekData, tier);
                 });
