@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Montessori Spanish Curriculum</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Lilita+One&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .font-display { font-family: 'Lilita One', cursive; }
+        .chart-container { position: relative; height: 180px; width: 100%; }
+        .modal-content { max-height: 80vh; }
+    </style>
+</head>
+<body class="bg-amber-50">
+
+    <!-- Main Container -->
+    <div class="container mx-auto p-4 md:p-8">
+
+        <!-- Header -->
+        <header class="text-center mb-8">
+            <h1 class="font-display text-4xl md:text-6xl text-amber-800 tracking-wider">Montessori Spanish Curriculum</h1>
+            <p class="text-slate-600 mt-2 text-lg">(Currículo Montessori de Español)</p>
+        </header>
+
+        <!-- Controls -->
+        <div class="bg-white rounded-xl shadow-md p-4 mb-8 sticky top-4 z-20 flex flex-col md:flex-row justify-between items-center gap-4">
+            <div id="tier-filter" class="flex flex-wrap justify-center gap-2">
+                <span class="font-bold text-slate-700 self-center mr-2">Filter by Age (Filtrar por edad):</span>
+                <button data-tier="all" class="tier-btn bg-teal-600 text-white px-4 py-2 rounded-full text-sm font-semibold shadow">All (Todos)</button>
+                <button data-tier="1" class="tier-btn bg-white text-slate-700 px-4 py-2 rounded-full text-sm font-semibold border border-slate-300">4-5 yrs</button>
+                <button data-tier="2" class="tier-btn bg-white text-slate-700 px-4 py-2 rounded-full text-sm font-semibold border border-slate-300">6-9 yrs</button>
+                <button data-tier="3" class="tier-btn bg-white text-slate-700 px-4 py-2 rounded-full text-sm font-semibold border border-slate-300">9-12 yrs</button>
+            </div>
+            <button id="open-guides-modal" class="bg-amber-500 hover:bg-amber-600 text-white px-4 py-2 rounded-full text-sm font-semibold shadow transition-colors">Teaching Guides (Guías para enseñar)</button>
+        </div>
+
+        <!-- Curriculum Grid -->
+        <main id="curriculum-grid" class="space-y-12">
+            <!-- Units will be dynamically inserted here -->
+        </main>
+
+    </div>
+
+    <!-- Lesson Detail Modal -->
+    <div id="lesson-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center p-4 z-50">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-2xl transform transition-all scale-95 opacity-0">
+            <div class="p-6 border-b border-slate-200 flex justify-between items-center">
+                <div>
+                    <h3 id="modal-title" class="text-2xl font-bold text-slate-800"></h3>
+                    <p id="modal-subtitle" class="text-slate-500"></p>
+                </div>
+                <button id="close-modal" class="text-slate-400 hover:text-slate-800">&times;</button>
+            </div>
+            <div id="modal-content" class="p-6 overflow-y-auto modal-content">
+                <!-- Modal content goes here -->
+            </div>
+        </div>
+    </div>
+    
+    <!-- Teaching Guides Modal -->
+    <div id="guides-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center p-4 z-50">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-2xl transform transition-all scale-95 opacity-0">
+            <div class="p-6 border-b border-slate-200 flex justify-between items-center">
+                <h3 class="text-2xl font-bold text-slate-800">Teaching Guides</h3>
+                <button id="close-guides-modal" class="text-slate-400 hover:text-slate-800 text-3xl leading-none">&times;</button>
+            </div>
+            <div class="p-6 overflow-y-auto modal-content">
+                <h4 class="font-bold text-xl text-teal-700 mb-4">Criteria for Selecting Spanish Tongue Twisters</h4>
+                <div class="space-y-6 text-slate-700">
+                    <div>
+                        <h5 class="font-bold text-lg mb-2">Tier 1: Ages 4-5</h5>
+                        <p class="font-semibold mb-2 text-slate-600">Focus: Phonetic Simplicity and Repetition</p>
+                        <ul class="list-disc list-inside space-y-1">
+                            <li><strong>Short and Rhythmic:</strong> They feel more like a simple chant than a complex sentence, making them easy to remember and repeat.</li>
+                            <li><strong>Focused on a Single, Simple Sound:</strong> They concentrate on common consonant sounds like 'p', 'c', and 'b', avoiding more challenging phonetic combinations.</li>
+                            <li><strong>Concrete and Relatable Imagery:</strong> The concepts are simple and often silly, like a boy hammering a nail, which is easy for young children to visualize and understand.</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h5 class="font-bold text-lg mb-2">Tier 2: Ages 6-9</h5>
+                        <p class="font-semibold mb-2 text-slate-600">Focus: Targeted Phonetic Challenges</p>
+                        <ul class="list-disc list-inside space-y-1">
+                            <li><strong>Isolate a Key Spanish Sound:</strong> These tongue twisters provide extensive practice for sounds that don't always exist in English, with a particular focus on the rolled 'rr'.</li>
+                            <li><strong>Introduce a Narrative:</strong> The sentences begin to tell a short story (e.g., a dog's tail, a witch's potion). This aids memorization and makes the exercise more engaging.</li>
+                            <li><strong>Increase in Length and Complexity:</strong> The twisters are longer than those in Tier 1, requiring more breath control and focus, which is appropriate for this developmental stage.</li>
+                        </ul>
+                    </div>
+                     <div>
+                        <h5 class="font-bold text-lg mb-2">Tier 3: Ages 9-12</h5>
+                        <p class="font-semibold mb-2 text-slate-600">Focus: Complexity, Speed, and Abstract Language</p>
+                        <ul class="list-disc list-inside space-y-1">
+                            <li><strong>Feature Complex, Multi-syllable Words:</strong> The challenge shifts from single sounds to verbal dexterity and navigating very long, complicated words (e.g., *arzobispo de Constantinopla*).</li>
+                            <li><strong>Play with Grammar and Abstract Concepts:</strong> Some twisters are almost philosophical, challenging the brain to process the meaning while the mouth handles the similar-sounding words.</li>
+                            <li><strong>Demand Speed and Precision:</strong> These are classic speed challenges where the focus is on articulating a repeating sound pattern as quickly as possible without stumbling.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        const curriculumData = [
+            {
+                unit: 1,
+                title: `Pasos Preliminares (Preliminary Steps)`,
+                weeks: [
+                    { week: 1, title: `The Spanish Alphabet (El alfabeto)`, tiers: {
+                        1: { title: `Letter Sounds & Objects`, content: `<strong>Presentation:</strong> Use Montessori sandpaper letters for 'a', 'm', 'p', 's'. Associate each with a sound and an object (e.g., 'a' for 'avión').<br><strong>Activity:</strong> 'I Spy' with letter sounds. 'Veo, veo... algo que empieza con /m/.' (I see... something that starts with /m/).`},
+                        2: { title: `Unique Spanish Sounds`, content: `<strong>Presentation:</strong> Introduce letters with unique sounds: 'ñ', 'll', and the soft/hard 'c' and 'g'. Use picture cards (ñandú, llave, cepillo, gato, gemelos).<br><strong>Activity:</strong> A sorting game where children sort picture cards by their initial sound.`},
+                        3: { title: `Accents & Diacritical Marks`, content: `<strong>Presentation:</strong> Explain that the accent mark (tilde) shows where to put the stress in a word. Use examples like 'mamá' vs. 'mama'.<br><strong>Activity:</strong> Children clap out the syllables of words, clapping louder on the accented syllable.`}
+                    }},
+                    { week: 2, title: `Numbers 0-10 (Los números 0-10)`, tiers: {
+                        1: { title: `Counting with Beads`, content: `<strong>Presentation:</strong> Use Montessori number rods or bead bars to introduce numbers 0-10. Count them, touch them.<br><strong>Activity:</strong> A scavenger hunt where children find a specific number of items (e.g., 'tres lápices').`},
+                        2: { title: `Writing Numerals & Words`, content: `<strong>Presentation:</strong> Match number cards (0-10) with cards showing the Spanish word (cero, uno, dos...).<br><strong>Activity:</strong> Use sand trays for children to practice tracing the numerals and letters.`},
+                        3: { title: `Simple Math Sentences`, content: `<strong>Presentation:</strong> Introduce 'más' (+) and 'menos' (-). Create simple addition/subtraction problems using bead bars.<br><strong>Activity:</strong> Children create and solve their own simple math problems in Spanish.`}
+                    }},
+                    { week: 3, title: `Colors (Los colores)`, tiers: {
+                        1: { title: `Color Hunt`, content: `<strong>Presentation:</strong> Use Montessori color tablets to introduce basic colors (rojo, azul, amarillo).<br><strong>Activity:</strong> A color hunt around the room. 'Encuentra algo rojo.' (Find something red.)`},
+                        2: { title: `Color Mixing`, content: `<strong>Presentation:</strong> Introduce secondary colors (verde, anaranjado, morado) and how they are made. <br><strong>Activity:</strong> A simple painting activity where children mix primary colors to create secondary colors.`},
+                        3: { title: `Describing with Colors`, content: `<strong>Presentation:</strong> Explain that in Spanish, the color comes after the noun (e.g., 'el carro rojo').<br><strong>Activity:</strong> Children choose an object and describe it using its color. 'La manzana es roja.'`}
+                    }},
+                    { week: 4, title: `Days of the Week (Los días de la semana)`, tiers: {
+                        1: { title: `Days of the Week Song`, content: `<strong>Presentation:</strong> Introduce the days with a simple song. Use a calendar to show the sequence.<br><strong>Activity:</strong> Children place labeled day cards in the correct order.`},
+                        2: { title: `Yesterday, Today, Tomorrow`, content: `<strong>Presentation:</strong> Introduce the concepts of 'ayer', 'hoy', and 'mañana'. Use a visual timeline or calendar.<br><strong>Activity:</strong> Each day, update a chart that says 'Ayer fue...', 'Hoy es...', 'Mañana será...'`},
+                        3: { title: `Connecting Days to Activities`, content: `<strong>Presentation:</strong> Discuss weekly schedules. 'El lunes, tenemos arte. El martes, tenemos música.'<br><strong>Activity:</strong> Children create their own simple visual weekly schedule.`}
+                    }},
+                    { week: 5, title: `Months & Seasons (Los meses y las estaciones)`, tiers: {
+                        1: { title: `Birthday Months`, content: `<strong>Presentation:</strong> Introduce the months, focusing on the children's birthday months.<br><strong>Activity:</strong> Create a large classroom birthday graph with each child's name and photo under their birth month.`},
+                        2: { title: `Seasons Sorting`, content: `<strong>Presentation:</strong> Introduce the four seasons and their corresponding weather/activities. <br><strong>Activity:</strong> Children sort picture cards (e.g., snowman, beach, falling leaves) into the correct season.`},
+                        3: { title: `Dates and Holidays`, content: `<strong>Presentation:</strong> Show how to write the date in Spanish (day, month, year). Discuss holidays that fall in certain months.<br><strong>Activity:</strong> Children practice writing important dates, like their birthday or today's date.`}
+                    }},
+                     { week: 6, title: `Weather (El tiempo)`, tiers: {
+                        1: { title: `Weather Chart`, content: `<strong>Presentation:</strong> Introduce simple weather phrases: 'Hace sol', 'Está lloviendo', 'Hace frío'. Use picture cards.<br><strong>Activity:</strong> Each day, a child is the 'meteorologist' and chooses the correct picture for the daily weather chart.`},
+                        2: { title: `Dressing for the Weather`, content: `<strong>Presentation:</strong> Connect weather phrases to appropriate clothing.<br><strong>Activity:</strong> A paper doll or felt board activity where children dress a figure according to a given weather condition.`},
+                        3: { title: `Weather around the World`, content: `<strong>Presentation:</strong> Use a globe to explain that the weather is different in other parts of the world. 'En Argentina, ahora es invierno.'<br><strong>Activity:</strong> Look up the weather in a Spanish-speaking city and compare it to the local weather.`}
+                    }},
+                    { week: 7, title: `Greetings & Farewells (Saludos y despedidas)`, tiers: {
+                        1: { title: `Simple Greetings`, content: `<strong>Presentation:</strong> Teach 'hola' and 'adiós' with hand gestures (waving).<br><strong>Activity:</strong> Practice greeting and saying goodbye to a puppet or to each other at the start and end of the lesson.`},
+                        2: { title: `Time of Day Greetings`, content: `<strong>Presentation:</strong> Introduce 'buenos días', 'buenas tardes', and 'buenas noches'. Connect them to pictures of the sun and moon.<br><strong>Activity:</strong> Role-playing different scenarios for using each greeting.`},
+                        3: { title: `Formal vs. Informal`, content: `<strong>Presentation:</strong> Briefly introduce 'cómo estás' (informal) and 'cómo está usted' (formal). Explain one is for friends, the other for respected adults.<br><strong>Activity:</strong> Children practice greeting the teacher formally and their friends informally.`}
+                    }},
+                    { week: 8, title: `The Story of Spanish (La historia del español)`, tiers: {
+                        1: { title: `A Language from Far Away`, content: `<strong>Presentation:</strong> Use a globe. Show Spain. 'Spanish started here, a long, long time ago.' Show the Americas. 'Then, people traveled on boats and brought the language here.'<br><strong>Activity:</strong> Children can draw pictures of boats traveling across the ocean from Spain to the Americas.`},
+                        2: { title: `From Latin to Spanish`, content: `<strong>Presentation:</strong> Tell a simplified story. 'A long time ago in Spain, people spoke a language called Latin. Over time, it slowly changed, like how a baby grows into a child. It became Spanish!' Show a few simple Latin-to-Spanish word examples (PATER -> padre, MĀTER -> madre).<br><strong>Activity:</strong> Create a simple timeline with three pictures: Roman soldiers (Latin), a castle in old Spain (Old Spanish), and a modern city in a Spanish-speaking country (Modern Spanish).`},
+                        3: { title: `Spread to the Americas & Beyond`, content: `<strong>Presentation:</strong> Use a world map. 'Spanish started in Spain. When explorers like Christopher Columbus traveled, they brought their language with them. That's why most countries in Central and South America speak Spanish.' Point out Mexico, Colombia, Argentina, etc. Also point out places like Equatorial Guinea in Africa. 'The language grew and mixed with the words of the people who already lived there, making it even richer.'<br><strong>Activity:</strong> Give children a world map and have them color in all the countries where Spanish is an official language. Discuss how the Spanish spoken in Spain can be slightly different from the Spanish in Mexico, just like English in the UK is different from English in the US.`}
+                    }},
+                    { week: 9, title: `Cognates (Los cognados)`, tiers: {
+                        1: { title: `Word Twins`, content: `<strong>Presentation:</strong> Use objects for perfect cognates. 'This is an animal. In Spanish, it's an animal. They sound the same!' Do the same for 'color' and 'chocolate'.<br><strong>Activity:</strong> 'What's in the box?' game. Pull out an object that is a perfect cognate and have children say the word in both languages.`},
+                        2: { title: `Word Cousins`, content: `<strong>Presentation:</strong> Introduce cognates that are very close (familia/family, clase/class). 'They're not twins, but they're close cousins!'<br><strong>Activity:</strong> A matching game with cards that have the English word on one and the Spanish cognate on the other.`},
+                        3: { title: `Cognate Patterns`, content: `<strong>Presentation:</strong> Discuss common patterns, like English '-tion' becomes Spanish '-ción' (celebration/celebración).<br><strong>Activity:</strong> Give a simple Spanish paragraph and have students hunt for and highlight all the cognates they can find.`}
+                    }},
+                ]
+            },
+            {
+                unit: 2,
+                title: `¿Cómo somos? (What are we like?)`,
+                weeks: [
+                    { week: 10, title: `Identifying People (Nouns)`, tiers: {
+                        1: { title: `Family Members`, content: `<strong>Presentation:</strong> Use picture cards for 'mamá', 'papá', 'bebé'.<br><strong>Activity:</strong> Children match the picture cards to photos of their own family members.`},
+                        2: { title: `Community Helpers`, content: `<strong>Presentation:</strong> Introduce 'el doctor'/'la doctora', 'el maestro'/'la maestra'. Discuss masculine and feminine forms.<br><strong>Activity:</strong> Children draw a picture of a community helper and label it.`},
+                        3: { title: `More People & Plurals`, content: `<strong>Presentation:</strong> Introduce 'el amigo'/'la amiga', 'el chico'/'la chica'. Explain how to make them plural by adding '-s' or '-es'.<br><strong>Activity:</strong> Sorting game: children sort cards into singular/plural and masculine/feminine piles.`}
+                    }},
+                    { week: 11, title: `Describing People (Adjectives & Ser)`, tiers: {
+                        1: { title: `Happy & Sad`, content: `<strong>Presentation:</strong> Use faces to teach 'alto' (tall) and 'bajo' (short). Use simple sentences: 'El chico es alto.'<br><strong>Activity:</strong> Children stand up if they are 'alto' and crouch down if they are 'bajo'.`},
+                        2: { title: `Appearance & Agreement`, content: `<strong>Presentation:</strong> Introduce more adjectives (bonito/a, guapo/a). Explain that the adjective must match the gender of the noun. 'La chica es bonita.'<br><strong>Activity:</strong> Children are given a picture of a person and a choice of two adjectives, and they circle the one that matches in gender.`},
+                        3: { title: `Personality & Ser Conjugation`, content: `<strong>Presentation:</strong> Introduce personality traits (inteligente, simpático/a). Introduce the full present-tense conjugation of 'ser' (soy, eres, es, somos, son).<br><strong>Activity:</strong> Children write simple sentences about themselves and others. 'Yo soy inteligente. Mi amigo es simpático.'`}
+                    }},
+                ]
+            },
+             {
+                unit: 3,
+                title: `En la clase (In the classroom)`,
+                weeks: [
+                    { week: 12, title: `Telling Time (La hora)`, tiers: {
+                        1: { title: `Hours on the Clock`, content: `<strong>Presentation:</strong> Use a large toy clock. Introduce telling time on the hour. 'Es la una,' 'Son las dos.'<br><strong>Activity:</strong> The teacher calls out a time (e.g., 'Son las cuatro') and a child moves the clock hands to the correct position.`},
+                        2: { title: `Half and Quarter Hours`, content: `<strong>Presentation:</strong> Introduce 'y media' (thirty) and 'y cuarto' (fifteen). Show these on the clock.<br><strong>Activity:</strong> Time bingo. Children have cards with clocks, and the teacher calls out times like 'Son las dos y media.'`},
+                        3: { title: `Minutes & Full Expressions`, content: `<strong>Presentation:</strong> Explain how to tell the exact time using minutes ('Son las tres y diez'). Introduce 'de la mañana,' 'de la tarde,' 'de la noche.'<br><strong>Activity:</strong> Children work in pairs with a toy clock, asking each other '¿Qué hora es?' and answering with the exact time.`}
+                    }},
+                    { week: 13, title: `School Subjects & Supplies (-ar verbs)`, tiers: {
+                        1: { title: `Subjects & Supplies`, content: `<strong>Presentation:</strong> Hold up school supplies and name them: 'el lápiz,' 'el libro,' 'el papel.'<br><strong>Activity:</strong> A memory game with cards showing school supplies.`},
+                        2: { title: `Simple -ar Verbs`, content: `<strong>Presentation:</strong> Introduce basic -ar verbs related to school: 'hablar,' 'estudiar,' 'dibujar.' Mime the actions.<br><strong>Activity:</strong> A game of charades where children act out the verbs for others to guess in Spanish.`},
+                        3: { title: `Conjugating -ar Verbs`, content: `<strong>Presentation:</strong> Explain how to conjugate regular -ar verbs (yo -o, tú -as, él/ella -a).<br><strong>Activity:</strong> Sentence building. Children use cards with subjects, verbs, and objects to create sentences like 'Yo hablo español' or 'Ella dibuja un flor.'`}
+                    }},
+                ]
+            },
+             {
+                unit: 4,
+                title: `En la escuela (At school)`,
+                weeks: [
+                    { week: 14, title: `Places in School (Estar & Prepositions)`, tiers: {
+                        1: { title: `Classroom and Playground`, content: `<strong>Presentation:</strong> Introduce 'el salón de clase' and 'el patio de recreo.' Use the verb 'estar': 'El niño está en el patio.'<br><strong>Activity:</strong> Children are given two pictures (classroom, playground) and place little figures in the correct location based on the teacher's sentence.`},
+                        2: { title: `More Places & Simple Prepositions`, content: `<strong>Presentation:</strong> Introduce 'la biblioteca,' 'el gimnasio.' Introduce prepositions 'en,' 'al lado de' (next to).<br><strong>Activity:</strong> A barrier game. One child places items on a map of a school and describes their location to a partner, who tries to replicate it.`},
+                        3: { title: `Estar Conjugation & Location Questions`, content: `<strong>Presentation:</strong> Teach the full conjugation of 'estar' (estoy, estás, está, estamos, están). Introduce question word '¿Dónde?' (Where?).<br><strong>Activity:</strong> Children ask and answer questions about where people are in the school. '¿Dónde está la maestra?' 'La maestra está en la biblioteca.'`}
+                    }},
+                    { week: 15, title: `The Verb 'Ir' (To go)`, tiers: {
+                        1: { title: `Going to Places`, content: `<strong>Presentation:</strong> Introduce the concept of 'ir a' (to go to). 'Yo voy al patio.' Use gestures for movement.<br><strong>Activity:</strong> Children move a figure on a school map according to simple commands. 'El chico va a la biblioteca.'`},
+                        2: { title: `Ir Conjugation (Yo, Tú, Él/Ella)`, content: `<strong>Presentation:</strong> Teach the first three forms of 'ir': 'voy,' 'vas,' 'va.'<br><strong>Activity:</strong> Role-playing. One child asks '¿Adónde vas?' (Where are you going?), and the other answers 'Voy al gimnasio.'`},
+                        3: { title: `Full 'Ir' Conjugation & Contractions`, content: `<strong>Presentation:</strong> Teach the full conjugation (voy, vas, va, vamos, van). Explain the contractions 'a + el = al' and 'de + el = del.'<br><strong>Activity:</strong> Children complete sentences with the correct form of 'ir' and the correct contraction. 'Nosotros vamos ___ gimnasio.' (al)`}
+                    }},
+                ]
+            },
+            {
+                unit: 5,
+                title: `La familia (The family)`,
+                weeks: [
+                    { week: 16, title: `Family Members (-er/-ir verbs)`, tiers: {
+                        1: { title: `Immediate Family`, content: `<strong>Presentation:</strong> Use a felt board or dollhouse to introduce 'hermano,' 'hermana,' 'abuelo,' 'abuela.'<br><strong>Activity:</strong> Children create their own simple family tree with drawings and labels.`},
+                        2: { title: `Simple -er Verbs`, content: `<strong>Presentation:</strong> Introduce key -er verbs like 'comer' (to eat) and 'beber' (to drink).<br><strong>Activity:</strong> A 'tea party' or snack time where children practice saying 'Yo como una galleta' (I eat a cookie) or 'Yo bebo agua' (I drink water).`},
+                        3: { title: `Conjugating -er/-ir Verbs`, content: `<strong>Presentation:</strong> Explain how to conjugate regular -er and -ir verbs (yo -o, tú -es, él/ella -e). Introduce 'vivir' (to live).<br><strong>Activity:</strong> Children write or say sentences about their family. 'Mi familia vive en California. Mi hermano come manzanas.'`}
+                    }},
+                     { week: 17, title: `Possession (Tener & Possessive Adjectives)`, tiers: {
+                        1: { title: `My & Your`, content: `<strong>Presentation:</strong> Introduce 'mi' (my) and 'tu' (your). Hold up an object: 'Mi libro.' Give it to a child: 'Tu libro.'<br><strong>Activity:</strong> Children go around the room and label items with 'mi' or 'tu' sticky notes.`},
+                        2: { title: `Tener (Yo, Tú, Él/Ella)`, content: `<strong>Presentation:</strong> Introduce the first three forms of 'tener' (to have): 'tengo,' 'tienes,' 'tiene.'<br><strong>Activity:</strong> A guessing game. 'Tengo algo azul en mi mano. ¿Qué es?' (I have something blue in my hand. What is it?)`},
+                        3: { title: `Full 'Tener' & More Possessives`, content: `<strong>Presentation:</strong> Teach the full conjugation of 'tener.' Introduce all possessive adjectives (mi, tu, su, nuestro, su) and explain that they must agree in number ('mis libros').<br><strong>Activity:</strong> Children draw a picture of their family and write sentences describing them. 'Yo tengo una hermana. Su nombre es... Tenemos un perro.'`}
+                    }},
+                ]
+            },
+            {
+                unit: 6,
+                title: `La comida (Food)`,
+                weeks: [
+                     { week: 18, title: `Meals & Food Items`, tiers: {
+                        1: { title: `Basic Foods`, content: `<strong>Presentation:</strong> Use realistic food models to introduce 'pan' (bread), 'queso' (cheese), 'leche' (milk), 'manzana' (apple).<br><strong>Activity:</strong> A pretend picnic where children identify and name the food items.`},
+                        2: { title: `Meals of the Day`, content: `<strong>Presentation:</strong> Introduce 'el desayuno' (breakfast), 'el almuerzo' (lunch), 'la cena' (dinner).<br><strong>Activity:</strong> Children sort pictures of food items into the meal where they would most likely be eaten.`},
+                        3: { title: `Ordering in a Cafe`, content: `<strong>Presentation:</strong> Introduce more food vocabulary and phrases like 'Quisiera...' (I would like...) and '¿Cuánto cuesta?' (How much does it cost?).<br><strong>Activity:</strong> Role-play a cafe scene. One child is the waiter, and the other is the customer ordering food.`}
+                    }},
+                    { week: 19, title: `Stem-Changing Verbs (e -> ie)`, tiers: {
+                        1: { title: `Wanting`, content: `<strong>Presentation:</strong> Introduce the verb 'querer' (to want). Focus on the 'yo' form: 'Yo quiero una manzana.'<br><strong>Activity:</strong> Children go 'shopping' in a pretend market, stating what they want to buy using 'Yo quiero... '`},
+                        2: { title: `The 'Boot' Concept`, content: `<strong>Presentation:</strong> Introduce 'querer' and 'preferir'. Show a conjugation chart and draw a boot shape around the forms that stem-change (yo, tú, él/ella, ellos/ellas). Explain 'nosotros' is outside the boot and doesn't change.<br><strong>Activity:</strong> Children fill in the blanks in sentences with the correct form of 'querer' or 'preferir'.`},
+                        3: { title: `Thinking & Closing`, content: `<strong>Presentation:</strong> Introduce more e->ie verbs like 'pensar' (to think), 'cerrar' (to close), and 'empezar' (to begin).<br><strong>Activity:</strong> Children answer questions using the new verbs. '¿Qué piensas de la pizza?' '¿A qué hora empieza la clase?'`}
+                    }},
+                ]
+            },
+             {
+                unit: 7,
+                title: `El tiempo libre (Free time)`,
+                weeks: [
+                     { week: 20, title: `Activities & Hobbies (Gustar)`, tiers: {
+                        1: { title: `Likes`, content: `<strong>Presentation:</strong> Introduce the phrase 'Me gusta...' (I like...) with actions like 'cantar' (to sing) and 'bailar' (to dance).<br><strong>Activity:</strong> Children take turns sharing one activity they like to do using 'Me gusta...'`},
+                        2: { title: `Likes & Dislikes`, content: `<strong>Presentation:</strong> Explain how to use 'Me gusta(n)' for singular/plural nouns and 'No me gusta' for dislikes.<br><strong>Activity:</strong> A class survey. Children go around asking '¿Te gusta(n)...?' and tally the results for 'sí' or 'no.'`},
+                        3: { title: `Expressing Others' Likes`, content: `<strong>Presentation:</strong> Introduce the indirect object pronouns (me, te, le, nos, les). Explain the full structure: 'A mí me gusta,' 'A ella le gusta.'<br><strong>Activity:</strong> Children interview a partner about their likes and dislikes and then report back to the class. 'A mi amigo le gustan los deportes.'`}
+                    }},
+                    { week: 21, title: `Future Plans (Ir a + infinitive)`, tiers: {
+                        1: { title: `I'm Going To...`, content: `<strong>Presentation:</strong> Introduce the immediate future: 'Voy a jugar' (I am going to play).<br><strong>Activity:</strong> Children draw a picture of what they are going to do after the lesson and label it 'Voy a...'`},
+                        2: { title: `Making Plans`, content: `<strong>Presentation:</strong> Practice using different subjects. 'Vamos a leer un libro' (We are going to read a book). 'Ella va a dibujar.'<br><strong>Activity:</strong> Children work in small groups to decide on an activity they will do together, presenting their plan as 'Vamos a...'`},
+                        3: { title: `Asking about Future Plans`, content: `<strong>Presentation:</strong> Introduce how to ask questions about the future: '¿Qué vas a hacer el fin de semana?' (What are you going to do this weekend?).<br><strong>Activity:</strong> Chain story. One student starts with 'El sábado, voy a...', and the next student adds what they are going to do.`}
+                    }},
+                     { week: 22, title: `Sports`, tiers: {
+                        1: { title: `Common Sports`, content: `<strong>Presentation:</strong> Introduce 'el fútbol', 'el béisbol', 'el baloncesto' with picture cards and balls.<br><strong>Activity:</strong> A sorting game where children sort equipment (bats, balls, etc.) with the picture of the correct sport.`},
+                        2: { title: `Playing Sports (Jugar)`, content: `<strong>Presentation:</strong> Introduce the stem-changing verb 'jugar' (u->ue). 'Yo juego al fútbol.' Explain that 'jugar' is followed by 'a la' or 'al.'<br><strong>Activity:</strong> Children mime playing a sport, and other children guess by saying 'Tú juegas al...'`},
+                        3: { title: `Talking about Sports`, content: `<strong>Presentation:</strong> Introduce vocabulary for players ('jugador/a'), teams ('equipo'), and places ('el campo,' 'la cancha').<br><strong>Activity:</strong> Children create a simple trading card for their favorite athlete, including their name, team, and sport.`}
+                    }},
+                    { week: 23, title: `Numbers 11-30`, tiers: {
+                        1: { title: `Numbers 11-15`, content: `<strong>Presentation:</strong> Use Montessori bead bars to introduce 11-15 (once, doce, trece, catorce, quince), highlighting their unique names.<br><strong>Activity:</strong> A memory game matching the numeral to the Spanish word.`},
+                        2: { title: `Numbers 16-19`, content: `<strong>Presentation:</strong> Show how 16-19 are formed ('diez y seis' -> 'dieciséis'). Build them with bead bars (a ten bar and a six bar).<br><strong>Activity:</strong> Children practice writing the numbers and the words.`},
+                        3: { title: `Numbers 20-30`, content: `<strong>Presentation:</strong> Introduce 'veinte' and show how 21-29 are single words ('veintiuno'). Introduce 'treinta'.<br><strong>Activity:</strong> A counting game where children count objects in the room up to 30.`}
+                    }},
+                     { week: 24, title: `Review & Conversation`, tiers: {
+                        1: { title: `Favorite Things`, content: `<strong>Presentation:</strong> Review colors, animals, and foods.<br><strong>Activity:</strong> Each child creates a 'My Favorite Things' poster with drawings labeled in Spanish ('Mi color favorito es...', 'Mi animal favorito es...').`},
+                        2: { title: `All About Me`, content: `<strong>Presentation:</strong> Review sentence structures for describing oneself and one's family and likes.<br><strong>Activity:</strong> Children fill out a simple 'All About Me' worksheet in Spanish.`},
+                        3: { title: `Simple Skit`, content: `<strong>Presentation:</strong> Review greetings, introductions, and asking questions.<br><strong>Activity:</strong> In pairs, children prepare and perform a short skit where they meet for the first time, ask each other's names, ages, and what they like to do.`}
+                    }},
+                    { week: 25, title: `South American Geography`, tiers: {
+                        1: { title: `Puzzle Map`, content: `<strong>Presentation:</strong> Introduce the Montessori puzzle map of South America. Name a few large, distinct countries like Brazil and Argentina.<br><strong>Activity:</strong> Children work with the puzzle map, taking the pieces out and putting them back.`},
+                        2: { title: `Countries and Capitals`, content: `<strong>Presentation:</strong> Introduce more countries and their capitals (e.g., Colombia/Bogotá, Perú/Lima).<br><strong>Activity:</strong> A matching game with country shape cards and capital name cards.`},
+                        3: { title: `Cultural Highlights`, content: `<strong>Presentation:</strong> For a few countries, show pictures of a famous landmark, animal, or cultural product (e.g., Machu Picchu for Peru, tango for Argentina, coffee for Colombia).<br><strong>Activity:</strong> Children choose a South American country and draw a picture representing something they learned about it.`}
+                    }},
+                    { week: 26, title: `Central American Geography`, tiers: {
+                        1: { title: `Connecting Continents`, content: `<strong>Presentation:</strong> Show Central America on a map as the bridge between North and South America. Introduce Mexico and Panama.<br><strong>Activity:</strong> Children use clay to form the isthmus of Central America connecting two larger landmasses.`},
+                        2: { title: `More Countries`, content: `<strong>Presentation:</strong> Introduce other countries like Costa Rica and Guatemala.<br><strong>Activity:</strong> Children color a map of Central America, labeling the countries they have learned.`},
+                        3: { title: `Unique Features`, content: `<strong>Presentation:</strong> Discuss unique features of the region, like the Panama Canal, the rainforests of Costa Rica, and ancient Mayan ruins in Guatemala.<br><strong>Activity:</strong> Children create a travel postcard from a Central American country, drawing a picture on one side and writing a simple sentence on the other ('Estoy en Costa Rica. Me gustan las selvas.').`}
+                    }},
+                    { week: 27, title: `Caribbean Geography`, tiers: {
+                        1: { title: `Islands`, content: `<strong>Presentation:</strong> Use a globe or map to show the island nations of the Caribbean. Introduce Cuba and Puerto Rico.<br><strong>Activity:</strong> Children make their own small 'islands' out of blue and green construction paper.`},
+                        2: { title: `Music and Culture`, content: `<strong>Presentation:</strong> Introduce the Dominican Republic. Talk about how the Caribbean is famous for its music, like salsa and merengue.<br><strong>Activity:</strong> Listen to some child-appropriate salsa music and clap or dance to the rhythm.`},
+                        3: { title: `Comparing Islands`, content: `<strong>Presentation:</strong> Discuss the similarities and differences between the three main Spanish-speaking islands (Cuba, Dominican Republic, Puerto Rico). Talk about their shared history and unique identities.<br><strong>Activity:</strong> A simple Venn diagram activity where children sort facts about the three islands.`}
+                    }},
+                     { week: 28, title: `Spanish in Europe & Africa`, tiers: {
+                        1: { title: `Spain`, content: `<strong>Presentation:</strong> Show Spain on the map of Europe. 'This is where Spanish started!' Show pictures of famous Spanish things like flamenco dancers or paella.<br><strong>Activity:</strong> A coloring sheet of the Spanish flag.`},
+                        2: { title: `Equatorial Guinea`, content: `<strong>Presentation:</strong> Show Equatorial Guinea on the map of Africa. Explain that it is the only country in Africa where Spanish is an official language.<br><strong>Activity:</strong> Look at pictures of the jungle and unique animals from Equatorial Guinea.`},
+                        3: { title: `Language Differences`, content: `<strong>Presentation:</strong> Briefly discuss how the accent and some vocabulary in Spain are different from Latin America (e.g., 'coche' vs 'carro' for car).<br><strong>Activity:</strong> A simple sorting game with a few vocabulary words that are different in Spain vs. Latin America.`}
+                    }},
+                     { week: 29, title: `Final Project & Celebration`, tiers: {
+                        1: { title: `My Spanish Storybook`, content: `<strong>Activity:</strong> Children create a simple 3-4 page book with one sentence per page, showing what they have learned. For example: 'Me llamo...', 'Me gusta el color...', 'Yo como... '`},
+                        2: { title: `Cultural Fair Booth`, content: `<strong>Activity:</strong> Children choose a Spanish-speaking country and create a small 'booth' with a colored flag, drawings of landmarks or animals, and labels in Spanish.`},
+                        3: { title: `Presentation: Un Viaje (A Trip)`, content: `<strong>Activity:</strong> Children prepare a short presentation about a trip to a Spanish-speaking country. They must say which country they are 'visiting', what the weather is like, one food they will eat, and one activity they will do, using sentences they have learned throughout the course.`}
+                    }}
+                ]
+            }
+        ];
+
+        const grid = document.getElementById('curriculum-grid');
+        const modal = document.getElementById('lesson-modal');
+        const modalTitle = document.getElementById('modal-title');
+        const modalSubtitle = document.getElementById('modal-subtitle');
+        const modalContent = document.getElementById('modal-content');
+        const closeModalBtn = document.getElementById('close-modal');
+
+        const guidesModal = document.getElementById('guides-modal');
+        const openGuidesModalBtn = document.getElementById('open-guides-modal');
+        const closeGuidesModalBtn = document.getElementById('close-guides-modal');
+
+        let activeTier = 'all';
+
+        const openModal = (week, tier) => {
+            const tierData = week.tiers[tier];
+            modalTitle.textContent = `${week.title}`;
+            modalSubtitle.textContent = `Tier ${tier} (${tier === 1 ? '4-5 yrs' : tier === 2 ? '6-9 yrs' : '9-12 yrs'})`;
+            modalContent.innerHTML = `<h4 class="font-bold text-lg mb-2 text-teal-700">${tierData.title}</h4><div class="prose max-w-none text-slate-700">${tierData.content}</div>`;
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modal.querySelector('.transform').classList.remove('scale-95', 'opacity-0');
+            }, 10);
+        };
+
+        const closeModal = () => {
+            modal.querySelector('.transform').classList.add('scale-95', 'opacity-0');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 200);
+        };
+        
+        const openGuidesModal = () => {
+            guidesModal.classList.remove('hidden');
+            setTimeout(() => {
+                guidesModal.querySelector('.transform').classList.remove('scale-95', 'opacity-0');
+            }, 10);
+        };
+        
+        const closeGuidesModal = () => {
+            guidesModal.querySelector('.transform').classList.add('scale-95', 'opacity-0');
+            setTimeout(() => {
+                guidesModal.classList.add('hidden');
+            }, 200);
+        };
+
+        const renderCurriculum = () => {
+            grid.innerHTML = '';
+            curriculumData.forEach(unit => {
+                const unitSection = document.createElement('section');
+
+                const unitHeader = document.createElement('div');
+                unitHeader.className = 'mb-6 pb-2 border-b-2 border-amber-200';
+                unitHeader.innerHTML = `<h2 class="font-display text-3xl md:text-4xl text-amber-700">Unit ${unit.unit}: ${unit.title}</h2>`;
+                unitSection.appendChild(unitHeader);
+
+                const weeksGrid = document.createElement('div');
+                weeksGrid.className = 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6';
+
+                unit.weeks.forEach(week => {
+                    const weekCard = document.createElement('div');
+                    weekCard.className = 'bg-white rounded-lg shadow-lg overflow-hidden flex flex-col';
+                    weekCard.innerHTML = `
+                        <div class="p-4 bg-teal-700 text-white">
+                            <h3 class="font-bold text-lg">Week ${week.week}: ${week.title}</h3>
+                        </div>
+                        <div class="p-4 flex-grow space-y-3">
+                            ${[1, 2, 3].map(tier => `
+                                <div data-tier="${tier}" class="tier-card ${activeTier !== 'all' && activeTier != tier ? 'hidden' : ''}">
+                                    <button data-week='${JSON.stringify(week).replace(/'/g, "&apos;").replace(/"/g, "'")}' data-tier="${tier}" class="w-full text-left p-3 bg-slate-50 hover:bg-teal-50 rounded-md transition-colors">
+                                        <h4 class="font-semibold text-teal-800">Tier ${tier} (${tier === 1 ? '4-5' : tier === 2 ? '6-9' : '9-12'} yrs)</h4>
+                                        <p class="text-sm text-slate-600 mt-1">${week.tiers[tier].title}</p>
+                                    </button>
+                                </div>
+                            `).join('')}
+                        </div>
+                    `;
+                    weeksGrid.appendChild(weekCard);
+                });
+
+                unitSection.appendChild(weeksGrid);
+                grid.appendChild(unitSection);
+            });
+
+            document.querySelectorAll('.tier-card button').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    // Correctly parse the JSON string from the button's data-week attribute
+                    const weekDataString = e.currentTarget.dataset.week.replace(/'/g, '"').replace(/&apos;/g, "'");
+                    const weekData = JSON.parse(weekDataString);
+                    const tier = e.currentTarget.dataset.tier;
+                    openModal(weekData, tier);
+                });
+            });
+        };
+
+        // Filter functionality
+        const filterBtns = document.querySelectorAll('.tier-btn');
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                filterBtns.forEach(b => {
+                    b.classList.remove('bg-teal-600', 'text-white');
+                    b.classList.add('bg-white', 'text-slate-700', 'border', 'border-slate-300');
+                });
+                btn.classList.add('bg-teal-600', 'text-white');
+                btn.classList.remove('bg-white', 'text-slate-700', 'border', 'border-slate-300');
+                
+                activeTier = btn.dataset.tier;
+                document.querySelectorAll('.tier-card').forEach(card => {
+                    if (activeTier === 'all' || card.dataset.tier === activeTier) {
+                        card.classList.remove('hidden');
+                    } else {
+                        card.classList.add('hidden');
+                    }
+                });
+            });
+        });
+
+        // Initial render
+        renderCurriculum();
+        
+        // Modal events
+        closeModalBtn.addEventListener('click', closeModal);
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) closeModal();
+        });
+        
+        openGuidesModalBtn.addEventListener('click', openGuidesModal);
+        closeGuidesModalBtn.addEventListener('click', closeGuidesModal);
+        guidesModal.addEventListener('click', (e) => {
+            if(e.target === guidesModal) closeGuidesModal();
+        });
+
+    </script>
+</body>
+</html>
+
