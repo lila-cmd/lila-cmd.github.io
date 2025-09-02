@@ -3,9 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title> Spanish at MdTL: Curriculum Scaffold</title>
+    <title>MdTL Spanish Curriculum</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Lilita+One&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Inter', sans-serif; }
@@ -15,47 +14,65 @@
 </head>
 <body class="bg-amber-50">
 
-    <!-- Main Container -->
-    <div class="container mx-auto p-4 md:p-8">
+    <!-- Main Curriculum View -->
+    <div id="main-view">
+        <div class="container mx-auto p-4 md:p-8">
+            <header class="text-center mb-8">
+                <h1 class="font-display text-4xl md:text-6xl text-amber-800 tracking-wider">MdTL Spanish Curriculum</h1>
+                <p class="text-slate-600 mt-2 text-lg">(Currículo Montessori de Español)</p>
+            </header>
 
-        <!-- Header -->
-        <header class="text-center mb-8">
-            <h1 class="font-display text-4xl md:text-6xl text-amber-800 tracking-wider">Montessori Spanish Curriculum</h1>
-            <p class="text-slate-600 mt-2 text-lg">(Currículo Montessori de Español)</p>
-        </header>
-
-        <!-- Controls -->
-        <div class="bg-white rounded-xl shadow-md p-4 mb-8 sticky top-4 z-20 flex flex-col md:flex-row justify-between items-center gap-4">
-            <div id="tier-filter" class="flex flex-wrap justify-center gap-2">
-                <span class="font-bold text-slate-700 self-center mr-2">Filter by Age (Filtrar por edad):</span>
-                <button data-tier="all" class="tier-btn bg-teal-600 text-white px-4 py-2 rounded-full text-sm font-semibold shadow">All (Todos)</button>
-                <button data-tier="1" class="tier-btn bg-white text-slate-700 px-4 py-2 rounded-full text-sm font-semibold border border-slate-300">4-5 yrs</button>
-                <button data-tier="2" class="tier-btn bg-white text-slate-700 px-4 py-2 rounded-full text-sm font-semibold border border-slate-300">6-9 yrs</button>
-                <button data-tier="3" class="tier-btn bg-white text-slate-700 px-4 py-2 rounded-full text-sm font-semibold border border-slate-300">9-12 yrs</button>
+            <div class="bg-white rounded-xl shadow-md p-4 mb-8 sticky top-4 z-20 flex flex-col md:flex-row justify-between items-center gap-4">
+                <div id="tier-filter" class="flex flex-wrap justify-center gap-2">
+                    <span class="font-bold text-slate-700 self-center mr-2">Filter by Age (Filtrar por edad):</span>
+                    <button data-tier="all" class="tier-btn bg-teal-600 text-white px-4 py-2 rounded-full text-sm font-semibold shadow">All (Todos)</button>
+                    <button data-tier="1" class="tier-btn bg-white text-slate-700 px-4 py-2 rounded-full text-sm font-semibold border border-slate-300">4-5 yrs</button>
+                    <button data-tier="2" class="tier-btn bg-white text-slate-700 px-4 py-2 rounded-full text-sm font-semibold border border-slate-300">6-9 yrs</button>
+                    <button data-tier="3" class="tier-btn bg-white text-slate-700 px-4 py-2 rounded-full text-sm font-semibold border border-slate-300">9-12 yrs</button>
+                </div>
+                <button id="open-guides-modal" class="bg-amber-500 hover:bg-amber-600 text-white px-4 py-2 rounded-full text-sm font-semibold shadow transition-colors">Teacher's Guides (Guías)</button>
             </div>
-            <button id="open-guides-modal" class="bg-amber-500 hover:bg-amber-600 text-white px-4 py-2 rounded-full text-sm font-semibold shadow transition-colors">View All Lesson Plans (Ver Planes de Lecciones)</button>
+
+            <main id="curriculum-grid" class="space-y-12">
+                <!-- Units will be dynamically inserted here -->
+            </main>
         </div>
+    </div>
 
-        <!-- Curriculum Grid -->
-        <main id="curriculum-grid" class="space-y-12">
-            <!-- Units will be dynamically inserted here -->
-        </main>
-
+    <!-- Lesson Detail View (Initially Hidden) -->
+    <div id="lesson-view" class="hidden">
+        <div class="container mx-auto p-4 md:p-8">
+            <header class="mb-8">
+                <button id="back-to-curriculum" class="mb-4 inline-flex items-center text-teal-700 hover:text-teal-900 font-semibold">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+                    Back to Curriculum
+                </button>
+                <h1 id="lesson-title" class="font-display text-4xl md:text-5xl text-amber-800"></h1>
+            </header>
+            <main id="lesson-content" class="bg-white rounded-xl shadow-lg p-6 md:p-8">
+                <!-- Detailed lesson content will be injected here -->
+            </main>
+        </div>
     </div>
     
-    <!-- Teaching Guides Modal -->
+    <!-- Teacher's Guides Modal -->
     <div id="guides-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center p-4 z-50">
-        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-4xl transform transition-all scale-95 opacity-0">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-3xl transform transition-all scale-95 opacity-0">
             <div class="p-6 border-b border-slate-200 flex justify-between items-center">
-                <h3 class="text-2xl font-bold text-slate-800">Complete Lesson Plans & Teaching Guides</h3>
+                <h3 class="text-2xl font-bold text-slate-800">Teacher's Guides & Rationales</h3>
                 <button id="close-guides-modal" class="text-slate-400 hover:text-slate-800 text-3xl leading-none">&times;</button>
             </div>
-            <div id="guides-content" class="p-6 md:p-8 overflow-y-auto modal-content">
-                <!-- All guides and lesson plans will be dynamically inserted here -->
+            <div class="p-6 md:p-8 overflow-y-auto modal-content">
+                <div class="mb-8">
+                    <h4 class="font-bold text-xl text-teal-700 mb-4">Criteria for Selecting Spanish Tongue Twisters</h4>
+                    <div class="space-y-6 text-slate-700">
+                        <!-- Criteria content here -->
+                    </div>
+                </div>
+                <!-- Future guides can be added here -->
             </div>
         </div>
     </div>
-
 
     <script>
         const curriculumData = [
@@ -120,7 +137,7 @@
                         3: { title: `More People & Plurals`, content: `<strong>Presentation:</strong> Introduce 'el amigo'/'la amiga', 'el chico'/'la chica'. Explain how to make them plural by adding '-s' or '-es'.<br><strong>Activity:</strong> Sorting game: children sort cards into singular/plural and masculine/feminine piles.`}
                     }},
                     { week: 11, title: `Describing People (Adjectives & Ser)`, tiers: {
-                        1: { title: `Happy & Sad`, content: `<strong>Presentation:</strong> Use faces to teach 'alto' (tall) and 'bajo' (short). Use simple sentences: 'El chico es alto.'<br><strong>Activity:</strong> Children stand up if they are 'alto' and crouch down if they are 'bajo'.`},
+                        1: { title: `Tall & Short`, content: `<strong>Presentation:</strong> Use pictures or stand up/crouch down to teach 'alto' (tall) and 'bajo' (short). Use simple sentences: 'El chico es alto.'<br><strong>Activity:</strong> Compare two dolls or figures and describe them using 'alto' and 'bajo'.`},
                         2: { title: `Appearance & Agreement`, content: `<strong>Presentation:</strong> Introduce more adjectives (bonito/a, guapo/a). Explain that the adjective must match the gender of the noun. 'La chica es bonita.'<br><strong>Activity:</strong> Children are given a picture of a person and a choice of two adjectives, and they circle the one that matches in gender.`},
                         3: { title: `Personality & Ser Conjugation`, content: `<strong>Presentation:</strong> Introduce personality traits (inteligente, simpático/a). Introduce the full present-tense conjugation of 'ser' (soy, eres, es, somos, son).<br><strong>Activity:</strong> Children write simple sentences about themselves and others. 'Yo soy inteligente. Mi amigo es simpático.'`}
                     }},
@@ -138,7 +155,7 @@
                     { week: 13, title: `School Subjects & Supplies (-ar verbs)`, tiers: {
                         1: { title: `Subjects & Supplies`, content: `<strong>Presentation:</strong> Hold up school supplies and name them: 'el lápiz,' 'el libro,' 'el papel.'<br><strong>Activity:</strong> A memory game with cards showing school supplies.`},
                         2: { title: `Simple -ar Verbs`, content: `<strong>Presentation:</strong> Introduce basic -ar verbs related to school: 'hablar,' 'estudiar,' 'dibujar.' Mime the actions.<br><strong>Activity:</strong> A game of charades where children act out the verbs for others to guess in Spanish.`},
-                        3: { title: `Conjugating -ar Verbs`, content: `<strong>Presentation:</strong> Explain how to conjugate regular -ar verbs (yo -o, tú -as, él/ella -a).<br><strong>Activity:</strong> Sentence building. Children use cards with subjects, verbs, and objects to create sentences like 'Yo hablo español' or 'Ella dibuja un flor.'`}
+                        3: { title: `Conjugating -ar Verbs`, content: `<strong>Presentation:</strong> Explain how to conjugate regular -ar verbs (yo -o, tú -as, él/ella -a).<br><strong>Activity:</strong> Sentence building. Children use cards with subjects, verbs, and objects to create sentences like 'Yo hablo español' or 'Ella dibuja una flor.'`}
                     }},
                 ]
             },
@@ -248,88 +265,47 @@
             }
         ];
 
+        // DOM Elements
+        const mainView = document.getElementById('main-view');
+        const lessonView = document.getElementById('lesson-view');
         const grid = document.getElementById('curriculum-grid');
         const guidesModal = document.getElementById('guides-modal');
         const openGuidesModalBtn = document.getElementById('open-guides-modal');
         const closeGuidesModalBtn = document.getElementById('close-guides-modal');
-        const guidesContent = document.getElementById('guides-content');
+        const backToCurriculumBtn = document.getElementById('back-to-curriculum');
 
         let activeTier = 'all';
 
-        const openGuidesModal = () => {
-            guidesModal.classList.remove('hidden');
-            setTimeout(() => {
-                guidesModal.querySelector('.transform').classList.remove('scale-95', 'opacity-0');
-            }, 10);
-        };
-        
-        const closeGuidesModal = () => {
-            guidesModal.querySelector('.transform').classList.add('scale-95', 'opacity-0');
-            setTimeout(() => {
-                guidesModal.classList.add('hidden');
-            }, 200);
+        // Functions to switch between views
+        const showMainView = () => {
+            mainView.classList.remove('hidden');
+            lessonView.classList.add('hidden');
         };
 
-        const populateGuidesModal = () => {
-            let html = `
-                <div class="mb-8">
-                    <h4 class="font-bold text-xl text-teal-700 mb-4">Criteria for Selecting Spanish Tongue Twisters</h4>
-                    <div class="space-y-6 text-slate-700">
-                        <div>
-                            <h5 class="font-bold text-lg mb-2">Tier 1: Ages 4-5</h5>
-                            <p class="font-semibold mb-2 text-slate-600">Focus: Phonetic Simplicity and Repetition</p>
-                            <ul class="list-disc list-inside space-y-1">
-                                <li><strong>Short and Rhythmic:</strong> They feel more like a simple chant than a complex sentence, making them easy to remember and repeat.</li>
-                                <li><strong>Focused on a Single, Simple Sound:</strong> They concentrate on common consonant sounds like 'p', 'c', and 'b', avoiding more challenging phonetic combinations.</li>
-                                <li><strong>Concrete and Relatable Imagery:</strong> The concepts are simple and often silly, like a boy hammering a nail, which is easy for young children to visualize and understand.</li>
-                            </ul>
-                        </div>
-                        <div>
-                            <h5 class="font-bold text-lg mb-2">Tier 2: Ages 6-9</h5>
-                            <p class="font-semibold mb-2 text-slate-600">Focus: Targeted Phonetic Challenges</p>
-                            <ul class="list-disc list-inside space-y-1">
-                                <li><strong>Isolate a Key Spanish Sound:</strong> These tongue twisters provide extensive practice for sounds that don't always exist in English, with a particular focus on the rolled 'rr'.</li>
-                                <li><strong>Introduce a Narrative:</strong> The sentences begin to tell a short story (e.g., a dog's tail, a witch's potion). This aids memorization and makes the exercise more engaging.</li>
-                                <li><strong>Increase in Length and Complexity:</strong> The twisters are longer than those in Tier 1, requiring more breath control and focus, which is appropriate for this developmental stage.</li>
-                            </ul>
-                        </div>
-                         <div>
-                            <h5 class="font-bold text-lg mb-2">Tier 3: Ages 9-12</h5>
-                            <p class="font-semibold mb-2 text-slate-600">Focus: Complexity, Speed, and Abstract Language</p>
-                            <ul class="list-disc list-inside space-y-1">
-                                <li><strong>Feature Complex, Multi-syllable Words:</strong> The challenge shifts from single sounds to verbal dexterity and navigating very long, complicated words (e.g., *arzobispo de Constantinopla*).</li>
-                                <li><strong>Play with Grammar and Abstract Concepts:</strong> Some twisters are almost philosophical, challenging the brain to process the meaning while the mouth handles the similar-sounding words.</li>
-                                <li><strong>Demand Speed and Precision:</strong> These are classic speed challenges where the focus is on articulating a repeating sound pattern as quickly as possible without stumbling.</li>
-                            </ul>
-                        </div>
+        const showLessonView = (week) => {
+            const lessonTitleEl = document.getElementById('lesson-title');
+            const lessonContentEl = document.getElementById('lesson-content');
+
+            lessonTitleEl.textContent = `Week ${week.week}: ${week.title}`;
+            
+            let contentHTML = [1, 2, 3].map(tier => {
+                const tierData = week.tiers[tier];
+                return `
+                    <div class="mb-6 p-4 rounded-lg bg-slate-50">
+                        <h3 class="font-bold text-xl text-teal-800 mb-3">Tier ${tier} (${tier === 1 ? '4-5' : tier === 2 ? '6-9' : '9-12'} yrs): ${tierData.title}</h3>
+                        <div class="prose max-w-none text-slate-700">${tierData.content}</div>
                     </div>
-                </div>`;
+                `;
+            }).join('');
+            
+            lessonContentEl.innerHTML = contentHTML;
 
-            curriculumData.forEach(unit => {
-                html += `<hr class="my-8 border-amber-200"><h2 class="font-display text-3xl text-amber-700 mb-6">Unit ${unit.unit}: ${unit.title}</h2>`;
-
-                unit.weeks.forEach(week => {
-                    html += `
-                        <div class="mb-6 p-4 rounded-lg bg-white shadow-sm">
-                            <h3 class="font-bold text-xl text-teal-800 mb-3">Week ${week.week}: ${week.title}</h3>
-                            <div class="space-y-4 pl-4 border-l-2 border-teal-100">
-                                ${[1, 2, 3].map(tier => {
-                                    const tierData = week.tiers[tier];
-                                    return `
-                                        <div>
-                                            <h4 class="font-semibold text-base text-teal-700">Tier ${tier} (${tier === 1 ? '4-5' : tier === 2 ? '6-9' : '9-12'} yrs): ${tierData.title}</h4>
-                                            <div class="prose prose-sm max-w-none text-slate-600 mt-1">${tierData.content}</div>
-                                        </div>
-                                    `;
-                                }).join('')}
-                            </div>
-                        </div>
-                    `;
-                });
-            });
-            guidesContent.innerHTML = html;
+            mainView.classList.add('hidden');
+            lessonView.classList.remove('hidden');
+            window.scrollTo(0, 0); // Scroll to top of the new view
         };
 
+        // Render the main curriculum grid
         const renderCurriculum = () => {
             grid.innerHTML = '';
             curriculumData.forEach(unit => {
@@ -344,10 +320,100 @@
                 weeksGrid.className = 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6';
 
                 unit.weeks.forEach(week => {
-                    const weekCard = document.createElement('div');
-                    weekCard.className = 'bg-white rounded-lg shadow-lg overflow-hidden flex flex-col';
-                    
+                    const weekCard = document.createElement('button'); // Changed to a button for accessibility
+                    weekCard.className = 'bg-white rounded-lg shadow-lg overflow-hidden flex flex-col text-left hover:shadow-xl hover:-translate-y-1 transition-all duration-300';
+                    weekCard.onclick = () => showLessonView(week);
+
+                    let tiersHTML = [1, 2, 3].map(tier => `
+                        <div data-tier="${tier}" class="tier-card p-3 bg-slate-50 rounded-md ${activeTier !== 'all' && activeTier != tier ? 'hidden' : ''}">
+                            <h4 class="font-semibold text-teal-800">Tier ${tier} (${tier === 1 ? '4-5' : tier === 2 ? '6-9' : '9-12'} yrs)</h4>
+                            <p class="text-sm text-slate-600 mt-1">${week.tiers[tier].title}</p>
+                        </div>
+                    `).join('');
+
                     weekCard.innerHTML = `
                         <div class="p-4 bg-teal-700 text-white">
-                            <h3 class="font-bold text-lg">Week ${week.week}: ${week
+                            <h3 class="font-bold text-lg">Week ${week.week}: ${week.title}</h3>
+                        </div>
+                        <div class="p-4 flex-grow space-y-3">
+                            ${tiersHTML}
+                        </div>
+                    `;
+                    weeksGrid.appendChild(weekCard);
+                });
+
+                unitSection.appendChild(weeksGrid);
+                grid.appendChild(unitSection);
+            });
+        };
+
+        // Modal Logic
+        const openGuidesModal = () => {
+            const guidesContentEl = guidesModal.querySelector('.space-y-6');
+            guidesContentEl.innerHTML = `
+                <div>
+                    <h5 class="font-bold text-lg mb-2">Tier 1: Ages 4-5</h5>
+                    <p class="font-semibold mb-2 text-slate-600">Focus: Phonetic Simplicity and Repetition</p>
+                    <ul class="list-disc list-inside space-y-1">
+                        <li><strong>Short and Rhythmic:</strong> They feel more like a simple chant than a complex sentence.</li>
+                        <li><strong>Focused on a Single, Simple Sound:</strong> They concentrate on common consonant sounds like 'p', 'c', and 'b'.</li>
+                        <li><strong>Concrete and Relatable Imagery:</strong> The concepts are simple and often silly, like a boy hammering a nail.</li>
+                    </ul>
+                </div>
+                <div>
+                    <h5 class="font-bold text-lg mb-2">Tier 2: Ages 6-9</h5>
+                    <p class="font-semibold mb-2 text-slate-600">Focus: Targeted Phonetic Challenges</p>
+                    <ul class="list-disc list-inside space-y-1">
+                        <li><strong>Isolate a Key Spanish Sound:</strong> Provide extensive practice for sounds that don't always exist in English, like the rolled 'rr'.</li>
+                        <li><strong>Introduce a Narrative:</strong> The sentences begin to tell a short story to aid memorization.</li>
+                        <li><strong>Increase in Length and Complexity:</strong> The twisters are longer, requiring more breath control and focus.</li>
+                    </ul>
+                </div>
+                 <div>
+                    <h5 class="font-bold text-lg mb-2">Tier 3: Ages 9-12</h5>
+                    <p class="font-semibold mb-2 text-slate-600">Focus: Complexity, Speed, and Abstract Language</p>
+                    <ul class="list-disc list-inside space-y-1">
+                        <li><strong>Feature Complex, Multi-syllable Words:</strong> The challenge shifts from single sounds to verbal dexterity.</li>
+                        <li><strong>Play with Grammar and Abstract Concepts:</strong> Challenge the brain to process meaning while handling similar-sounding words.</li>
+                        <li><strong>Demand Speed and Precision:</strong> Classic speed challenges to articulate repeating sound patterns quickly.</li>
+                    </ul>
+                </div>
+            `;
+            guidesModal.classList.remove('hidden');
+            setTimeout(() => {
+                guidesModal.querySelector('.transform').classList.remove('scale-95', 'opacity-0');
+            }, 10);
+        };
+        
+        const closeGuidesModal = () => {
+            guidesModal.querySelector('.transform').classList.add('scale-95', 'opacity-0');
+            setTimeout(() => {
+                guidesModal.classList.add('hidden');
+            }, 200);
+        };
+
+        // Event Listeners
+        document.querySelectorAll('.tier-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.tier-btn').forEach(b => b.classList.remove('bg-teal-600', 'text-white'));
+                btn.classList.add('bg-teal-600', 'text-white');
+                activeTier = btn.dataset.tier;
+                document.querySelectorAll('.tier-card').forEach(card => {
+                    card.classList.toggle('hidden', activeTier !== 'all' && card.dataset.tier !== activeTier);
+                });
+            });
+        });
+        
+        backToCurriculumBtn.addEventListener('click', showMainView);
+        openGuidesModalBtn.addEventListener('click', openGuidesModal);
+        closeGuidesModalBtn.addEventListener('click', closeGuidesModal);
+        guidesModal.addEventListener('click', (e) => {
+            if(e.target === guidesModal) closeGuidesModal();
+        });
+
+        // Initial render
+        renderCurriculum();
+    </script>
+</body>
+</html>
 
